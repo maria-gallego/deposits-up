@@ -1,6 +1,6 @@
 import {
     convertedInterestRate, finalAmountWithPaymentPeriods, finalBalance,
-    finalMaturityAmount, validatedInvestmentTerm,
+    finalMaturityAmount, validatedInterestPaymentFrequency, validatedInvestmentTerm,
     validatedStatingBalance,
 } from "../interest-calculator";
 
@@ -37,6 +37,15 @@ describe('validatedInvestmentTerm', () => {
         expect(validatedInvestmentTerm(2.5)).toBe(2.5);
     });
 });
+describe('InterestPaymentFrequency', () => {
+    it('tests enum generator with a valid string', () => {
+        expect(validatedInterestPaymentFrequency("Monthly")).toEqual(12)
+    })
+
+    it('tests enum generator for at maturity', () => {
+        expect(validatedInterestPaymentFrequency("at maturity")).toEqual(0)
+    })
+})
 
 describe('finalMaturityAmount', () => {
     it('tests balance at maturity', () => {

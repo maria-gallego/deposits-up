@@ -1,4 +1,4 @@
-enum InterestPaymentFrequency {
+export enum InterestPaymentFrequency {
     MONTHLY = 12,
     QUARTERLY = 4,
     ANNUALLY = 1,
