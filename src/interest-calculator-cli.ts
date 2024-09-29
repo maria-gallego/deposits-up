@@ -1,19 +1,6 @@
 import {finalBalance} from "./interest-calculator";
-import {program} from 'commander';
 import inquirer from 'inquirer';
 
-// CLI Configuration
-program
-    .name("Interest Calculator CLI")
-    .version('0.0.1')
-    .description('Calculates the ending balance of a deposit ' +
-        'given the investment term, annual interest and interest payment frequency');
-
-// Process input arguments
-program.parse();
-const options = program.opts();
-
-// Use inquirer to prompt the user
 inquirer.prompt([
     {
         type: 'input',

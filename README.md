@@ -17,7 +17,7 @@ The application does not include a User Interface, but can be run through the te
 
 The application is divided into the following files.
 - `interest-calculator.ts` contains all the application logic, with `finalBalance` being the only entry point.
-- `interest-calculator-cli.ts` contains the interface related code and uses the function above to perform the financial calculations. The CLI is used on top of `Commander`, a popular library for this purpose, and uses `Inquirer` to facilitate user interaction.
+- `interest-calculator-cli.ts` contains the interface related code and uses the function above to perform the financial calculations. The CLI is built on top of `Inquirer`, a popular CLI library that facilitates user interaction.
 - `interest-calculator.test.ts` contains tests for the application logic as well as tests for the validation Errors.
 
 ## Installation
@@ -43,7 +43,7 @@ If you've provided an invalid value for any of these inputs, don't worry, you'll
 ## What further work could be done
 - A simple User Interface would be great to better interact with the application. It would just require input boxes to provide the values used to calculate the term deposit.
 - This would also facilitate error handling to give feedback to the user when an invalid value is provided.
-- If we were going to continue using the CLI to interact with the application, I would add validations here to prevent the user from providing invalid inputs like negative numbers. These validations only exist in the back-end.
+- If we were going to continue using the CLI to interact with the application, I would add validations here to prevent the user from providing invalid inputs like negative numbers. At the moment, these validations only exist in the back-end.
 - Currently, the user is only able to provide the investment term in years. I would like to give the possibility of providing an investment term in years and months e.g. 2 years and 5 months.
 - Allow the user to provide an investment term of less than 1 year.
 

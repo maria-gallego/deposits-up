@@ -1,8 +1,44 @@
+export const finalBalance = (
+    startingBalance: number,
+    interestRate: number,
+    investmentTerm: number,
+    interestPaymentFrequency: string
+) => {
+    const validatedStartingBalance = validateStatingBalance(startingBalance)
+    const validatedInterest = convertedInterestRate(interestRate)
+    const validatedInvestmentTerm = validateInvestmentTerm(investmentTerm)
+    const transformedInterestPaymentFrequency = validatedInterestPaymentFrequency(interestPaymentFrequency)
+    if(transformedInterestPaymentFrequency === 0) {
+        return finalMaturityAmount(validatedInterest, validatedStartingBalance, validatedInvestmentTerm)
+    } else {
+        return finalAmountWithPaymentPeriods(validatedStartingBalance, validatedInterest, validatedInvestmentTerm, transformedInterestPaymentFrequency)
+    }
+}
+
 export enum InterestPaymentFrequency {
     MONTHLY = 12,
     QUARTERLY = 4,
     ANNUALLY = 1,
     ATMATURITY = 0
+}
+
+export const finalMaturityAmount = (
+    validatedInterest: number,
+    validatedStartingBalance: number,
+    validatedInvestmentTerm: number
+): number => {
+    return (validatedStartingBalance * validatedInterest * validatedInvestmentTerm) + validatedStartingBalance
+}
+
+export const finalAmountWithPaymentPeriods = (
+    validatedStartingBalance: number,
+    validatedInterest: number,
+    validatedInvestmentTerm: number,
+    transformedInterestPaymentFrequency: InterestPaymentFrequency
+): number => {
+    const interestPerPeriod = validatedInterest / transformedInterestPaymentFrequency
+    const periodsInvested = transformedInterestPaymentFrequency * validatedInvestmentTerm
+    return validatedStartingBalance * (1 + interestPerPeriod) ** periodsInvested
 }
 
 export class ValidationError extends Error {
@@ -12,7 +48,7 @@ export class ValidationError extends Error {
     }
 }
 
-export const validatedStatingBalance = (startingBalance: number) => {
+export const validateStatingBalance = (startingBalance: number) => {
     if(startingBalance > 0) {
         return startingBalance
     } else {
@@ -28,11 +64,11 @@ export const convertedInterestRate = (interestRate: number): number => {
     }
 }
 
-export const validatedInvestmentTerm = (investmentTerm: number) => {
+export const validateInvestmentTerm = (investmentTerm: number) => {
     if(investmentTerm >= 1) {
         return investmentTerm
     } else {
-        throw new ValidationError('Investment term is the number os years the money will be invested and must be greater than 1')
+        throw new ValidationError('Investment term is the number of years the money will be invested and must be greater than 1')
     }
 }
 
@@ -44,41 +80,5 @@ export const validatedInterestPaymentFrequency = (interestPayment: string) => {
         return frequencyEnum
     } else {
         throw new ValidationError(`Payment frequency must be Monthly, Quarterly, Annually or At Maturity`)
-    }
-}
-
-export const finalMaturityAmount = (
-    interestRate: number,
-    startingBalance: number,
-    investmentTerm: number
-): number => {
-    const initialBalance = validatedStatingBalance(startingBalance)
-    return initialBalance + ( initialBalance * convertedInterestRate(interestRate) * investmentTerm)
-}
-
-export const finalAmountWithPaymentPeriods = (
-    startingBalance: number,
-    interestRate: number,
-    investmentTerm: number,
-    transformedInterestPaymentFrequency: InterestPaymentFrequency
-): number => {
-    const startingAmount = validatedStatingBalance(startingBalance)
-    const interestValue = convertedInterestRate(interestRate)
-    const interestPerPeriod = interestValue / transformedInterestPaymentFrequency
-    const periodsInvested = transformedInterestPaymentFrequency * validatedInvestmentTerm(investmentTerm)
-    return startingAmount * (1 + interestPerPeriod) ** periodsInvested
-}
-
-export const finalBalance = (
-    startingBalance: number,
-    interestRate: number,
-    investmentTerm: number,
-    interestPaymentFrequency: string
-) => {
-    const transformedInterestPaymentFrequency = validatedInterestPaymentFrequency(interestPaymentFrequency)
-    if(transformedInterestPaymentFrequency === 0) {
-        return finalMaturityAmount(interestRate, startingBalance, investmentTerm)
-    } else {
-        return finalAmountWithPaymentPeriods(startingBalance, interestRate, investmentTerm, transformedInterestPaymentFrequency)
     }
 }

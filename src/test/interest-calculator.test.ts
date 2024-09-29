@@ -1,16 +1,16 @@
 import {
     convertedInterestRate, finalAmountWithPaymentPeriods, finalBalance,
-    finalMaturityAmount, validatedInterestPaymentFrequency, validatedInvestmentTerm,
-    validatedStatingBalance,
+    finalMaturityAmount, validatedInterestPaymentFrequency, validateInvestmentTerm,
+    validateStatingBalance,
 } from "../interest-calculator";
 
 describe('validatedStatingBalance', () => {
     it('should throw a ValidationError if starting balance is 0', () => {
-        expect(() => validatedStatingBalance(0)).toThrow('Starting balance must be greater than 0')
-        expect(() => validatedStatingBalance(-10)).toThrow('Starting balance must be greater than 0')
+        expect(() => validateStatingBalance(0)).toThrow('Starting balance must be greater than 0')
+        expect(() => validateStatingBalance(-10)).toThrow('Starting balance must be greater than 0')
     })
     it('should return starting balance it is is greater than 0', () => {
-        expect(validatedStatingBalance(10000)).toBe(10000)
+        expect(validateStatingBalance(10000)).toBe(10000)
     })
 })
 
@@ -28,13 +28,13 @@ describe('convertedInterestRate', () => {
 
 describe('validatedInvestmentTerm', () => {
     it('should throw a ValidationError if investment period is less than 1', () => {
-        expect(() => validatedInvestmentTerm(0)).toThrow("Investment term is the number os years the money will be invested and must be greater than 1");
-        expect(() => validatedInvestmentTerm(-5)).toThrow("Investment term is the number os years the money will be invested and must be greater than 1");
+        expect(() => validateInvestmentTerm(0)).toThrow("Investment term is the number of years the money will be invested and must be greater than 1");
+        expect(() => validateInvestmentTerm(-5)).toThrow("Investment term is the number of years the money will be invested and must be greater than 1");
     });
 
     it('should return the converted interest rate for positive values', () => {
-        expect(validatedInvestmentTerm(2)).toBe(2);
-        expect(validatedInvestmentTerm(2.5)).toBe(2.5);
+        expect(validateInvestmentTerm(2)).toBe(2);
+        expect(validateInvestmentTerm(2.5)).toBe(2.5);
     });
 });
 describe('InterestPaymentFrequency', () => {
@@ -49,21 +49,21 @@ describe('InterestPaymentFrequency', () => {
 
 describe('finalMaturityAmount', () => {
     it('tests balance at maturity', () => {
-        expect(finalMaturityAmount(1.1, 10000, 3)).toBeCloseTo(10330.00, 2)
+        expect(finalMaturityAmount(0.01, 10000, 3)).toBeCloseTo(10300.00, 2)
     })
 })
 
 describe('finalAmountWithPaymentPeriods', () => {
     it('tests balance at monthly period', () => {
-        expect(finalAmountWithPaymentPeriods(10000, 5.0, 3, 12)).toBeCloseTo(11614.72, 2)
+        expect(finalAmountWithPaymentPeriods(10000, 0.05, 3, 12)).toBeCloseTo(11614.72, 2)
     })
 
     it('tests balance at quarterly period', () => {
-        expect(finalAmountWithPaymentPeriods(10000, 5.0, 3, 4)).toBeCloseTo(11607.55, 2)
+        expect(finalAmountWithPaymentPeriods(10000, 0.05, 3, 4)).toBeCloseTo(11607.55, 2)
     })
 
     it('tests balance at annually period', () => {
-        expect(finalAmountWithPaymentPeriods(10000, 5.0, 3, 1)).toBeCloseTo(11576.25, 2)
+        expect(finalAmountWithPaymentPeriods(10000, 0.05, 3, 1)).toBeCloseTo(11576.25, 2)
     })
 })
 
