@@ -1,8 +1,7 @@
 import {
-    convertedInterestRate,
+    convertedInterestRate, finalAmountWithPaymentPeriods, finalBalance,
     finalMaturityAmount, validatedInvestmentTerm,
     validatedStatingBalance,
-    ValidationError
 } from "../interest-calculator";
 
 describe('validatedStatingBalance', () => {
@@ -39,12 +38,32 @@ describe('validatedInvestmentTerm', () => {
     });
 });
 
-describe('tests final balance', () => {
-    // it('tests balance with period', () => {
-    //     expect(finalBalance("monthly", 10000, 1.1, 3)).toBeCloseTo(10335.35, 2)
-    // })
-
+describe('finalMaturityAmount', () => {
     it('tests balance at maturity', () => {
         expect(finalMaturityAmount(1.1, 10000, 3)).toBeCloseTo(10330.00, 2)
+    })
+})
+
+describe('finalAmountWithPaymentPeriods', () => {
+    it('tests balance at monthly period', () => {
+        expect(finalAmountWithPaymentPeriods(10000, 5.0, 3, 12)).toBeCloseTo(11614.72, 2)
+    })
+
+    it('tests balance at quarterly period', () => {
+        expect(finalAmountWithPaymentPeriods(10000, 5.0, 3, 4)).toBeCloseTo(11607.55, 2)
+    })
+
+    it('tests balance at annually period', () => {
+        expect(finalAmountWithPaymentPeriods(10000, 5.0, 3, 1)).toBeCloseTo(11576.25, 2)
+    })
+})
+
+describe('finalBalance', () => {
+    it('tests balance with period', () => {
+        expect(finalBalance( 20000, 5.0, 5, 'at maturity')).toBeCloseTo(25000, 2)
+    })
+
+    it('tests balance at maturity', () => {
+        expect(finalBalance(20000, 5.0, 5, 'monthly')).toBeCloseTo(25667.17, 2)
     })
 })

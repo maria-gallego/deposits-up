@@ -1,6 +1,9 @@
-// The formula for FD Calculation is: M = P + (P × r × t/100),
-// where M is the Maturity Amount, P is the Principal Amount, r is the rate of interest, and t is the tenure.
-
+enum InterestPaymentFrequency {
+    MONTHLY = 12,
+    QUARTERLY = 4,
+    ANNUALLY = 1,
+    ATMATURITY = 0
+}
 
 export class ValidationError extends Error {
     constructor(message: string) {
@@ -33,23 +36,6 @@ export const validatedInvestmentTerm = (investmentTerm: number) => {
     }
 }
 
-export const finalMaturityAmount = (
-    interestRate: number,
-    startingBalance: number,
-    investmentTerm: number
-): number => {
-    const initialBalance = validatedStatingBalance(startingBalance)
-    return initialBalance + ( initialBalance * convertedInterestRate(interestRate) * investmentTerm)
-}
-
-
-enum InterestPaymentFrequency {
-    MONTHLY = 12,
-    QUARTERLY = 4,
-    ANNUALLY = 1,
-    ATMATURITY = 0
-}
-
 export const validatedInterestPaymentFrequency = (interestPayment: string) => {
     const transformedPaymentInput = interestPayment.toUpperCase().replace(/\s/g, "")
     const frequencyEnum = InterestPaymentFrequency[transformedPaymentInput as keyof typeof InterestPaymentFrequency]
@@ -61,24 +47,38 @@ export const validatedInterestPaymentFrequency = (interestPayment: string) => {
     }
 }
 
+export const finalMaturityAmount = (
+    interestRate: number,
+    startingBalance: number,
+    investmentTerm: number
+): number => {
+    const initialBalance = validatedStatingBalance(startingBalance)
+    return initialBalance + ( initialBalance * convertedInterestRate(interestRate) * investmentTerm)
+}
 
-
-//For compounded interest, the formula is: M = P × {(1 + i/100)^t - 1},
-// where i is the rate of interest per period
-// and t is the tenure
 export const finalAmountWithPaymentPeriods = (
     startingBalance: number,
     interestRate: number,
     investmentTerm: number,
-    interestPaymentFrequency: string
+    transformedInterestPaymentFrequency: InterestPaymentFrequency
 ): number => {
     const startingAmount = validatedStatingBalance(startingBalance)
-    const transformedInterestPaymentFrequency = validatedInterestPaymentFrequency(interestPaymentFrequency)
     const interestValue = convertedInterestRate(interestRate)
     const interestPerPeriod = interestValue / transformedInterestPaymentFrequency
     const periodsInvested = transformedInterestPaymentFrequency * validatedInvestmentTerm(investmentTerm)
     return startingAmount * (1 + interestPerPeriod) ** periodsInvested
-
 }
 
-
+export const finalBalance = (
+    startingBalance: number,
+    interestRate: number,
+    investmentTerm: number,
+    interestPaymentFrequency: string
+) => {
+    const transformedInterestPaymentFrequency = validatedInterestPaymentFrequency(interestPaymentFrequency)
+    if(transformedInterestPaymentFrequency === 0) {
+        return finalMaturityAmount(interestRate, startingBalance, investmentTerm)
+    } else {
+        return finalAmountWithPaymentPeriods(startingBalance, interestRate, investmentTerm, transformedInterestPaymentFrequency)
+    }
+}
